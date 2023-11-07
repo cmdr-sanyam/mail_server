@@ -1,0 +1,79 @@
+<!-- image modal box -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Image</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="" class="img-fluid" id="image_modal_img" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- key flash notices separate of most user login items -->
+<% unless flash.empty? %>
+<script type="text/javascript">
+<% flash.each do |key, value|%>
+    <%
+    ftitle = toast_title(key)
+    finterval = 20000
+    if (key!="recaptcha_error" && key!="c_warning" && key != "auth_token") %>
+        <% if value.to_s != "true"
+
+            if (key == 'alert')
+                key = 'warning'
+            end
+
+            if (key == 'c_warning')
+                key = 'warning'
+                ftitle = "Notice"
+                finterval = 30000
+            end
+            %>
+
+         $.toast({
+            heading:'<%=ftitle%>',
+            text: "<%= value.html_safe %>",
+            position: 'top-right',
+            loaderBg: '<%=toast_color(key)%>',
+            icon: '<%=toast_key(key)%>',
+            hideAfter: `<%=finterval%>`,
+            stack: 6
+         });
+        <% end %>
+    <% end %>
+<% end %>
+
+  let logo_img = $("input[type='file']").on('input', function(){
+    $('.input-group-text').html(`<a href="javascript://" class="view_img"><img src="${window.URL.createObjectURL(this.files[0])}" class="img-fluid" width="22" /></a>`);
+
+  })
+  
+  // view image in modal popup
+  $('body').on('click', '.view_img',function(e){
+    e.preventDefault();
+    $('#image_modal_img').attr('src', $(this).find('img').attr('src'));
+    $('#imageModal').modal('show');
+  });
+</script>
+<% end %>
+<!-- /key flash notices separate of most user login items -->
+
+<div id="modal_confirm" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body pt-2" style="font-size: 1rem;">
+         
+      </div>
+      <div class="modal-footer">
+        <a id="modal-cancel" href="javascript://" class="btn btn-secondary cancel" data-dismiss="modal">Cancel</a>
+        <a id="modal-accept" href="javascript://" class="btn btn-danger approve">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
